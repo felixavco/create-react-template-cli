@@ -1,7 +1,20 @@
 import chalk from 'chalk';
 import execa from 'execa';
 import Listr from 'listr';
-import shell from 'shelljs'
+import shell from 'shelljs';
+import fs from 'fs';
+
+const createConfigFile = ({projectName, language, sass}) => {
+    const data = `
+    {
+        "project-name":"${projectName}",
+        "language":"${language.toLowerCase()}",
+        "style-lang":"${sass ? 'sass' : 'css'}"
+    }
+    `
+    shell.touch(['react-template.json'])
+    fs.writeFileSync(`${process.cwd()}/react-template.json`, data)
+}
 
 const createReactApp = async (options) => {
     try {
@@ -9,9 +22,11 @@ const createReactApp = async (options) => {
         const path = `${process.cwd()}/${projectName}/`;
         language = language.toLowerCase();
         language = language === 'typescript' ? `--${language}` : null;
+        console.log(path)
         await execa('npx', ['create-react-app', projectName, language]);
         shell.cd(path);
         await execa('mkdir', ['src/components', 'src/pages', 'src/styles']);
+        createConfigFile(options);
         return;
     } catch (error) {
         return Promise.reject(error.toString());
