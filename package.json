@@ -1,0 +1,27 @@
+{
+  "name": "@favelar/react-template",
+  "version": "1.0.0",
+  "description": "CLI to create React template and components structure with a simple command",
+  "main": "src/index.js",
+  "bin": {
+    "@favelar/react-template": "bin/react-template",
+    "rt": "bin/react-template"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "react-template"
+  ],
+  "author": "Felix Avelar",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "esm": "^3.2.25",
+    "execa": "^3.2.0",
+    "inquirer": "^7.0.0",
+    "listr": "^0.14.3",
+    "shelljs": "^0.8.3"
+  }
+}
