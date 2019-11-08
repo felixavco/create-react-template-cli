@@ -11,42 +11,49 @@ const parseArgs = rawArgs => {
 
 const promptQuestions = async () => {
 
+    const validateProjectName = async (input) => {        
+        const regex = /^[a-z0-9\-\_]+$/;
+        const isValid = regex.test(input);
+        return isValid ? true : 'Invalid project name'  
+    }
+
     const questions = [
         {
             type: 'input',
             name: 'projectName',
-            message: 'Please enter a project Name',
+            message: 'Please enter a project name',
+            validate: validateProjectName
         },
         {
             type: 'list',
             name: 'language',
             message: 'Please choose a language',
             choices: ['JavaScript', 'TypeScript'],
-            default: 'JavaScript',
+            default: 'JavaScript'
         },
         {
             type: 'confirm',
             name: 'sass',
             message: 'Do you want to use Sass?',
-            default: true,
+            default: true
         },
         {
             type: 'confirm',
             name: 'router',
             message: 'Do you want to install Router?',
-            default: true,
+            default: true
         },
         {
             type: 'confirm',
             name: 'axios',
             message: 'Do you want to install Axios?',
-            default: true,
+            default: true
         },
         {
             type: 'confirm',
             name: 'redux',
             message: 'Do you want to install Redux?',
-            default: true,
+            default: true
         }
     ];
 
