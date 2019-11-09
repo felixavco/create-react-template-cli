@@ -3,14 +3,15 @@ import execa from 'execa';
 import Listr from 'listr';
 import shell from 'shelljs';
 import { writeFileSync } from 'fs';
-import { testFileTemplate, appCompTemplate } from './templates';
+import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate } from './templates';
 
 const createConfigFile = ({ projectName, language, sass }) => {
     const data = `
     {
         "project-name":"${projectName}",
         "language":"${language.toLowerCase()}",
-        "styleLang":"${sass ? 'sass' : 'css'}",
+        "styleExt":"${sass ? 'scss' : 'css'}",
+        "compType":"func",
         "path": {
             "components":"src/components",
             "pages":"src/pages",
@@ -21,7 +22,7 @@ const createConfigFile = ({ projectName, language, sass }) => {
     writeFileSync(`${process.cwd()}/react-template.json`, data)
 }
 
-const createStyleDir = sass => {
+const createStyleDir = ({ sass }) => {
     const styleExt = sass ? 'scss' : 'css';
 
     const path = `${process.cwd()}/styles/App.${styleExt}`;
@@ -29,19 +30,32 @@ const createStyleDir = sass => {
     writeFileSync(path, '// App styles');
 }
 
-const createAppComp = (language, sass) => {
-    const fileExt = language === '--typescript' ? 'tsx' : 'jsx';
+const createReduxDir = ({ language }) => {
+    const path = `${process.cwd()}/src/redux`;
+    const fileExt = language === 'typescript' ? 'ts' : 'js';
+    shell.mkdir([path, `${path}/actions`, `${path}/reducers`]);
+    shell.cd(path);
+    writeFileSync(`${path}/store.${fileExt}`, storeTemplate());
+    writeFileSync(`${path}/types.${fileExt}`, "export const GET_ERRORS = 'GET_ERRORS';");
+    writeFileSync(`${path}/reducers/errorReducer.${fileExt}`, rootReducerTemplate());
+    writeFileSync(`${path}/reducers/index.${fileExt}`, rootReducerTemplate());
+}
+
+const createAppComp = (options) => {
+    const fileExt = options.language === 'typescript' ? 'tsx' : 'jsx';
 
     const path = `${process.cwd()}/`;
 
     writeFileSync(`${path}App.test.${fileExt}`, testFileTemplate('App'));
 
-    writeFileSync(`${path}App.${fileExt}`, appCompTemplate(language, sass));
+    writeFileSync(`${path}App.${fileExt}`, appCompTemplate(options));
+
+    writeFileSync(`${path}index.${fileExt}`, indexTemplate());
 }
 
 const createReactApp = async (options) => {
     try {
-        let { projectName, language, sass } = options;
+        let { projectName, language } = options;
 
         const path = `${process.cwd()}/${projectName}/`;
 
@@ -57,9 +71,9 @@ const createReactApp = async (options) => {
 
         shell.rm(['App.*', 'index.*', 'logo.svg']);
 
-        createStyleDir(sass);
+        createStyleDir(options);
 
-        createAppComp(language, sass);
+        createAppComp(options);
 
         shell.cd(path);
 
@@ -96,10 +110,10 @@ const installAxios = async () => {
     }
 }
 
-const installRedux = async () => {
+const installRedux = async (options) => {
     try {
         await execa('npm', ['install', 'redux', 'react-redux', 'redux-thunk']);
-        await execa('mkdir', ['src/redux']);
+        createReduxDir(options)
     } catch (error) {
         return Promise.reject(error.toString());
     }
@@ -117,7 +131,7 @@ export const createProject = async (options) => {
 
     if (axios) taskArr.push({ title: 'Instaling Axios', task: () => installAxios() });
 
-    if (redux) taskArr.push({ title: 'Instaling Redux', task: () => installRedux() });
+    if (redux) taskArr.push({ title: 'Instaling Redux', task: () => installRedux(options) });
 
     const tasks = new Listr(taskArr);
 

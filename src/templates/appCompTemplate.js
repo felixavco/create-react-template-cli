@@ -1,8 +1,7 @@
-const appCompTemplate = (language, sass) => {
+const appCompTemplate = ({ language, sass }) => {
   const styleExt = sass ? 'scss' : 'css';
 
-  let template = `
-import React from 'react';
+  let template = `import React from 'react';
 import './styles/App.${styleExt}'
 
 const App = () => {
@@ -17,8 +16,7 @@ export default App;
 `
 
   if (language === 'TypeScript') {
-    template = `
-import React, { FC } from 'react';
+    template = `import React, { FC } from 'react';
 import './styles/App.${styleExt}'
 
 const App: FC = () => {
@@ -31,7 +29,7 @@ const App: FC = () => {
 
 export default App;
 `
-}
+  }
   return template;
 }
 

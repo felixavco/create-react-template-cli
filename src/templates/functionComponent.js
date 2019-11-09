@@ -1,6 +1,6 @@
 const funcCompTemplate = (compName, language, styleExt) => {
   let template = `import React from 'react';
-import '${compName}.${styleExt}';
+import './${compName}.${styleExt}';
 
 const ${compName} = () => {
   return (
@@ -14,7 +14,7 @@ export default ${compName};
 `
   if (language === 'typescript') {
     template = `import React, { FC } from 'react';
-import '${compName}.${styleExt}';
+import './${compName}.${styleExt}';
 
 
 const ${compName}: FC = () => {

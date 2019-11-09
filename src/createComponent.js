@@ -10,7 +10,7 @@ const getConfig = () => {
 
 export const createComponent = (compType, compName, compPath = '') => {
 
-    const { path, language: lang,  styleLang } = getConfig();
+    const { path, language: lang,  styleExt } = getConfig();
 
     const newCompPath = `${process.cwd()}/${compType === 'page' ? path.pages : compType === 'component' ? path.components : compPath}/${compName}/`
 
@@ -18,8 +18,6 @@ export const createComponent = (compType, compName, compPath = '') => {
 
     const fileExt = lang === 'typescript' ? 'tsx' : 'jsx';
     
-    const styleExt = styleLang === 'sass' ? 'scss' : 'css';
-
     writeFileSync(
         `${newCompPath}/${compName}.${fileExt}`,
         funcCompTemplate(compName, lang, styleExt)
