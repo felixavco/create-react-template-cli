@@ -55,7 +55,7 @@ const createReactApp = async (options) => {
 
         await execa('mkdir', ['components', 'pages', 'styles']);
 
-        shell.rm(['App.*', 'index.css', 'logo.svg']);
+        shell.rm(['App.*', 'index.*', 'logo.svg']);
 
         createStyleDir(sass);
 
