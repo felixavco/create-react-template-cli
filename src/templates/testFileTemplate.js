@@ -1,8 +1,5 @@
-
-
-export const testFileTemplate = compName => {
-    return `
-import React from 'react';
+const testFileTemplate = compName => {
+    return `import React from 'react';
 import ReactDOM from 'react-dom';
 import ${compName} from './${compName}';
 

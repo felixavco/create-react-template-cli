@@ -101,7 +101,7 @@ export const cli = async (args) => {
             break;
 
         default:
-            console.log(' run "rt --init [-i]" to initiate a new project \n or \n run "rt --generate [-g] to generate a component or page"')
+            console.log('run "rt init [i]" to initiate a new project \n or \n run "rt generate [g] to generate a component or page"')
             break;
     }
 
