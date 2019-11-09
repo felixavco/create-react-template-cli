@@ -2,31 +2,69 @@ import chalk from 'chalk';
 import execa from 'execa';
 import Listr from 'listr';
 import shell from 'shelljs';
-import fs from 'fs';
+import { writeFileSync } from 'fs';
+import { testFileTemplate, appCompTemplate } from './templates';
 
-const createConfigFile = ({projectName, language, sass}) => {
+const createConfigFile = ({ projectName, language, sass }) => {
     const data = `
     {
         "project-name":"${projectName}",
         "language":"${language.toLowerCase()}",
-        "style-lang":"${sass ? 'sass' : 'css'}"
+        "styleLang":"${sass ? 'sass' : 'css'}",
+        "path": {
+            "components":"src/components",
+            "pages":"src/pages",
+            "styles":"src/styles"
+        }
     }
     `
-    shell.touch(['react-template.json'])
-    fs.writeFileSync(`${process.cwd()}/react-template.json`, data)
+    writeFileSync(`${process.cwd()}/react-template.json`, data)
+}
+
+const createStyleDir = sass => {
+    const styleExt = sass ? 'scss' : 'css';
+
+    const path = `${process.cwd()}/styles/App.${styleExt}`;
+
+    writeFileSync(path, '// App styles');
+}
+
+const createAppComp = (language, sass) => {
+    const fileExt = language === '--typescript' ? 'tsx' : 'jsx';
+
+    const path = `${process.cwd()}/`;
+
+    writeFileSync(`${path}App.test.${fileExt}`, testFileTemplate('App'));
+
+    writeFileSync(`${path}App.${fileExt}`, appCompTemplate(language, sass));
 }
 
 const createReactApp = async (options) => {
     try {
-        let { projectName, language } = options;
+        let { projectName, language, sass } = options;
+
         const path = `${process.cwd()}/${projectName}/`;
+
         language = language.toLowerCase();
+
         language = language === 'typescript' ? `--${language}` : null;
-        console.log(path)
+
         await execa('npx', ['create-react-app', projectName, language]);
+
+        shell.cd(path + '/src/');
+
+        await execa('mkdir', ['components', 'pages', 'styles']);
+
+        shell.rm(['App.*', 'index.*', 'logo.svg']);
+
+        createStyleDir(sass);
+
+        createAppComp(language, sass);
+
         shell.cd(path);
-        await execa('mkdir', ['src/components', 'src/pages', 'src/styles']);
+
         createConfigFile(options);
+
         return;
     } catch (error) {
         return Promise.reject(error.toString());

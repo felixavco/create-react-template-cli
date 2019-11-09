@@ -1,20 +1,39 @@
 import inquirer from 'inquirer';
 import { createProject } from './createProject';
+import { createComponent } from './createComponent';
 
 const parseArgs = rawArgs => {
+
+    const firstArg = rawArgs[2] ? rawArgs[2].toLowerCase() : null;
+    const secondArg = rawArgs[3] ? rawArgs[3].toLowerCase() : null;
+    const thirdArg = rawArgs[4] ? rawArgs[4].split(' ')[0].trim() : null;
+
     return {
-        first: rawArgs[2] === 'i' ? 'init' : rawArgs[2] === 'g' ? 'generate' : null,
-        second: rawArgs[3],
-        third: rawArgs[4]
+        action:
+            firstArg === 'i' ? 'init' :
+            firstArg === 'init' ? 'init' :
+            firstArg === 'g' ? 'generate' :
+            firstArg === 'generate' ? 'generate' :
+            firstArg === 'create' ? 'generate' :
+            firstArg === 'c' ? 'generate' :
+            null,
+        componentType:
+            secondArg === 'c' ? 'component' :
+            secondArg === 'component' ? 'component' :
+            secondArg === 'p' ? 'page' :
+            secondArg === 'page' ? 'page' :
+            null,
+        componentName: thirdArg,
+        // componentPath: rawArgs[5] || ''
     }
 }
 
 const promptQuestions = async () => {
 
-    const validateProjectName = async (input) => {        
+    const validateProjectName = async (input) => {
         const regex = /^[a-z0-9\-\_]+$/;
         const isValid = regex.test(input);
-        return isValid ? true : 'Invalid project name'  
+        return isValid ? true : 'Invalid project name'
     }
 
     const questions = [
@@ -69,16 +88,16 @@ const promptQuestions = async () => {
 }
 
 export const cli = async (args) => {
-    let { first } = parseArgs(args);
+    let { action, componentType, componentName } = parseArgs(args);
 
-    switch (first) {
+    switch (action) {
         case 'init':
             const projectOptions = await promptQuestions();
             await createProject(projectOptions);
             break;
 
         case 'generate':
-            console.log(args)
+            createComponent(componentType, componentName)
             break;
 
         default:
