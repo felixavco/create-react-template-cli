@@ -4,6 +4,7 @@ import Listr from 'listr';
 import shell from 'shelljs';
 import { writeFileSync } from 'fs';
 import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate, dockerFileTemplate } from './templates';
+import errorReducerTemplate from './templates/errorReducerTemplate';
 
 const createConfigFile = ({ projectName, language, sass }) => {
     const data = `{
@@ -31,13 +32,13 @@ const createStyleDir = ({ sass }) => {
 
 const createReduxDir = ({ language }) => {
     const path = `${process.cwd()}/src/redux`;
-    const fileExt = language === 'typescript' ? 'ts' : 'js';
+    const fileExt = language === 'TypeScript' ? 'ts' : 'js';
     shell.mkdir([path, `${path}/actions`, `${path}/reducers`]);
     shell.cd(path);
     writeFileSync(`${path}/store.${fileExt}`, storeTemplate());
     writeFileSync(`${path}/types.${fileExt}`, "export const GET_ERRORS = 'GET_ERRORS';");
-    writeFileSync(`${path}/reducers/errorReducer.${fileExt}`, rootReducerTemplate());
-    writeFileSync(`${path}/reducers/index.${fileExt}`, rootReducerTemplate());
+    writeFileSync(`${path}/reducers/errorsReducer.${fileExt}`, rootReducerTemplate());
+    writeFileSync(`${path}/reducers/index.${fileExt}`, errorReducerTemplate());
 }
 
 const createAppComp = (options) => {
