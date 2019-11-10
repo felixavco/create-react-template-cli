@@ -3,7 +3,7 @@ import execa from 'execa';
 import Listr from 'listr';
 import shell from 'shelljs';
 import { writeFileSync } from 'fs';
-import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate } from './templates';
+import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate, dockerFileTemplate } from './templates';
 
 const createConfigFile = ({ projectName, language, sass }) => {
     const data = `
@@ -42,7 +42,7 @@ const createReduxDir = ({ language }) => {
 }
 
 const createAppComp = (options) => {
-    const fileExt = options.language === 'typescript' ? 'tsx' : 'jsx';
+    const fileExt = options.language === 'TypeScript' ? 'tsx' : 'jsx';
 
     const path = `${process.cwd()}/`;
 
@@ -51,6 +51,12 @@ const createAppComp = (options) => {
     writeFileSync(`${path}App.${fileExt}`, appCompTemplate(options));
 
     writeFileSync(`${path}index.${fileExt}`, indexTemplate());
+}
+
+const createDockerFile = () => {
+    const path = `${process.cwd()}/`;
+    writeFileSync(path + 'DockerFile', dockerFileTemplate());
+    writeFileSync(path + '.dockerignore', 'node_modules');
 }
 
 const createReactApp = async (options) => {
@@ -79,7 +85,10 @@ const createReactApp = async (options) => {
 
         createConfigFile(options);
 
+        createDockerFile();
+
         return;
+
     } catch (error) {
         return Promise.reject(error.toString());
     }

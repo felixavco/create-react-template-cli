@@ -4,6 +4,7 @@ import appCompTemplate from './appCompTemplate';
 import storeTemplate from './storeTemplate';
 import rootReducerTemplate from './rootReducerTemplate';
 import indexTemplate from './indexTemplate';
+import dockerFileTemplate from './dockerFileTemplate';
 
 
 
@@ -13,5 +14,6 @@ export {
     appCompTemplate,
     storeTemplate,
     rootReducerTemplate,
-    indexTemplate
+    indexTemplate,
+    dockerFileTemplate
 }
