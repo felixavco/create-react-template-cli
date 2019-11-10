@@ -20,7 +20,7 @@ or
     rt c c MyComponent
 
 ### Create a page
-To create a component run:
+To create a page run:
 
     rt create page MyPage
 or 
