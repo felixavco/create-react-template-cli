@@ -37,9 +37,9 @@ export const createComponent = (compType, compName, compPath = '') => {
     console.log(chalk.blue(`${compName}.${styleExt}`), chalk.green('CREATED'));
 
     writeFileSync(
-        `${newCompPath}/index.js`, 
+        `${newCompPath}/index.${fileExt.slice(0, -1)}`, 
         `export { default } from './${compName}';`
     );
-    console.log(chalk.blue('index.js'), chalk.green('CREATED'));
+    console.log(chalk.blue(`index.${fileExt.slice(0, -1)}`), chalk.green('CREATED'));
 
 }

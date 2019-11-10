@@ -6,19 +6,18 @@ import { writeFileSync } from 'fs';
 import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate, dockerFileTemplate } from './templates';
 
 const createConfigFile = ({ projectName, language, sass }) => {
-    const data = `
-    {
-        "project-name":"${projectName}",
-        "language":"${language.toLowerCase()}",
-        "styleExt":"${sass ? 'scss' : 'css'}",
-        "compType":"func",
-        "path": {
-            "components":"src/components",
-            "pages":"src/pages",
-            "styles":"src/styles"
-        }
+    const data = `{
+    "project-name":"${projectName}",
+    "language":"${language.toLowerCase()}",
+    "styleExt":"${sass ? 'scss' : 'css'}",
+    "compType":"func",
+    "path": {
+        "components":"src/components",
+        "pages":"src/pages",
+        "styles":"src/styles"
     }
-    `
+}
+`
     writeFileSync(`${process.cwd()}/react-template.json`, data)
 }
 
