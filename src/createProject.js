@@ -37,8 +37,8 @@ const createReduxDir = ({ language }) => {
     shell.cd(path);
     writeFileSync(`${path}/store.${fileExt}`, storeTemplate());
     writeFileSync(`${path}/types.${fileExt}`, "export const GET_ERRORS = 'GET_ERRORS';");
-    writeFileSync(`${path}/reducers/errorsReducer.${fileExt}`, rootReducerTemplate());
-    writeFileSync(`${path}/reducers/index.${fileExt}`, errorReducerTemplate());
+    writeFileSync(`${path}/reducers/errorsReducer.${fileExt}`, errorReducerTemplate());
+    writeFileSync(`${path}/reducers/index.${fileExt}`, rootReducerTemplate());
 }
 
 const createAppComp = (options) => {
