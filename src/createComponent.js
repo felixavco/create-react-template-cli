@@ -8,38 +8,46 @@ const getConfig = () => {
     return JSON.parse(readFileSync(configPath).toString());
 }
 
-export const createComponent = (compType, compName, compPath = '') => {
+export const createComponent = (compType, compName, parentComp) => {
+
+    try {
 
     const { path, language: lang,  styleExt } = getConfig();
 
-    const newCompPath = `${process.cwd()}/${compType === 'page' ? path.pages : compType === 'component' ? path.components : compPath}/${compName}/`
+    let compPath = `${process.cwd()}/${compType === 'page' ? path.pages : compType === 'component' ? path.components : null}`;
 
-    shell.mkdir([newCompPath]);
+    compPath = parentComp ? `${compPath}/${parentComp}/${compName}/` : `${compPath}/${compName}/`;
+
+    shell.mkdir([compPath]);
 
     const fileExt = lang === 'typescript' ? 'tsx' : 'jsx';
     
     writeFileSync(
-        `${newCompPath}/${compName}.${fileExt}`,
+        `${compPath}/${compName}.${fileExt}`,
         funcCompTemplate(compName, lang, styleExt)
     )
     console.log(chalk.blue(`${compName}.${fileExt}`), chalk.green('CREATED'));
 
     writeFileSync(
-        `${newCompPath}/${compName}.test.${fileExt}`,
+        `${compPath}/${compName}.test.${fileExt}`,
         testFileTemplate(compName)
     )
     console.log(chalk.blue(`${compName}.test.${fileExt}`), chalk.green('CREATED'));
 
     writeFileSync(
-        `${newCompPath}/${compName}.${styleExt}`,
+        `${compPath}/${compName}.${styleExt}`,
         `/* ${compName} styles */`
     )
     console.log(chalk.blue(`${compName}.${styleExt}`), chalk.green('CREATED'));
 
     writeFileSync(
-        `${newCompPath}/index.${fileExt.slice(0, -1)}`, 
+        `${compPath}/index.${fileExt.slice(0, -1)}`, 
         `export { default } from './${compName}';`
     );
     console.log(chalk.blue(`index.${fileExt.slice(0, -1)}`), chalk.green('CREATED'));
+        
+    } catch (error) {
+        console.error(chalk.red(error.toSTring()))
+    }
 
 }

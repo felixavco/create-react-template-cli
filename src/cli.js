@@ -24,7 +24,7 @@ const parseArgs = rawArgs => {
             secondArg === 'page' ? 'page' :
             null,
         componentName: thirdArg,
-        // componentPath: rawArgs[5] || ''
+        parentComponent: rawArgs[5] || ''
     }
 }
 
@@ -88,7 +88,7 @@ const promptQuestions = async () => {
 }
 
 export const cli = async (args) => {
-    let { action, componentType, componentName } = parseArgs(args);
+    let { action, componentType, componentName, parentComponent } = parseArgs(args);
 
     switch (action) {
         case 'init':
@@ -97,7 +97,7 @@ export const cli = async (args) => {
             break;
 
         case 'generate':
-            createComponent(componentType, componentName)
+            createComponent(componentType, componentName, parentComponent)
             break;
 
         default:
