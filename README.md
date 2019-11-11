@@ -36,17 +36,20 @@ or
 
 ### Using the CLI on an existing project
 Is posible to use the CLI on an existing project, just create a file named `react-template.json` at the root of your project with the following content.
-    {
-        "project-name":"my-cool-app",
-        "language":"typescript",
-        "styleExt":"scss",
-        "compType":"func",
-        "path": {
-            "components":"src/components",
-            "pages":"src/pages",
-            "styles":"src/styles"
-        }
+
+```json
+{
+    "project-name":"a-test2",
+    "language":"typescript",
+    "styleExt":"scss",
+    "compType":"func",
+    "path": {
+        "components":"src/components",
+        "pages":"src/pages",
+        "styles":"src/styles"
     }
+}
+```
 
 - Change the `"language"` property to `javascript` or `typescript`.
 - Set the  `styleExt` property according to your project needs, options are `css`, `scss` `sass` or `less` (Less requires manual configuration).
