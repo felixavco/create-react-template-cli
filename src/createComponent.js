@@ -32,7 +32,7 @@ export const createComponent = (compType, compName, compPath = '') => {
 
     writeFileSync(
         `${newCompPath}/${compName}.${styleExt}`,
-        `//${compName} styles`
+        `/* ${compName} styles */`
     )
     console.log(chalk.blue(`${compName}.${styleExt}`), chalk.green('CREATED'));
 

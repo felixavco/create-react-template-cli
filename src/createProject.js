@@ -27,7 +27,7 @@ const createStyleDir = ({ sass }) => {
 
     const path = `${process.cwd()}/styles/App.${styleExt}`;
 
-    writeFileSync(path, '// App styles');
+    writeFileSync(path, '/* App styles */');
 }
 
 const createReduxDir = ({ language }) => {
