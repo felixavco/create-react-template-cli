@@ -1,18 +1,25 @@
 {
-  "name": "@favelar/react-template",
-  "version": "1.0.0",
-  "description": "CLI to create React template and components structure with a simple command",
+  "name": "create-react-template-cli",
+  "version": "1.0.1",
+  "description": "CLI tool that helps you to create a React project, or a command to create components",
   "main": "src/index.js",
   "bin": {
-    "@favelar/react-template": "bin/react-template",
-    "rt": "bin/react-template"
+    "rt": "src/index.js"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "files": [
+    "bin/",
+    "src/"
+  ],
   "keywords": [
     "cli",
-    "react-template"
+    "react-template",
+    "create-react-app",
+    "react",
+    "redux",
+    "axios",
+    "react-router-dom",
+    "docker",
+    "sass"
   ],
   "author": "Felix Avelar",
   "license": "MIT",
@@ -23,5 +30,13 @@
     "inquirer": "^7.0.0",
     "listr": "^0.14.3",
     "shelljs": "^0.8.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felixavco/react-template-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/felixavco/react-template-cli/issues"
+  },
+  "homepage": "https://github.com/felixavco/react-template-cli#readme"
 }

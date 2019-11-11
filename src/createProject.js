@@ -55,7 +55,7 @@ const createAppComp = (options) => {
 
 const createDockerFile = () => {
     const path = `${process.cwd()}/`;
-    writeFileSync(path + 'DockerFile', dockerFileTemplate());
+    writeFileSync(path + 'Dockerfile', dockerFileTemplate());
     writeFileSync(path + '.dockerignore', 'node_modules');
 }
 
