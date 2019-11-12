@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import execa from 'execa';
 import Listr from 'listr';
 import shell from 'shelljs';
-import { writeFileSync } from 'fs';
-import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate, dockerFileTemplate } from './templates';
+import { writeFileSync, readFileSync } from 'fs';
+import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate, dockerFileTemplate, enzymeConfigTemplate } from './templates';
 import errorReducerTemplate from './templates/errorReducerTemplate';
 
 const createConfigFile = ({ projectName, language, sass }) => {
@@ -57,6 +57,27 @@ const createDockerFile = () => {
     const path = `${process.cwd()}/`;
     writeFileSync(path + 'Dockerfile', dockerFileTemplate());
     writeFileSync(path + '.dockerignore', 'node_modules');
+}
+
+const configEnzyme = () => {
+    let path = process.cwd();
+
+    writeFileSync(`${path}/src/enzyme.config.js`, enzymeConfigTemplate());
+
+    path += '/package.json';
+
+    let packageJson = JSON.parse(readFileSync(path).toString());
+
+    if(packageJson.jest) {
+        packageJson.jest.setupFilesAfterEnv.push("<rootDir>src/enzyme.config.js");
+    } else {
+        const jest = { setupFilesAfterEnv: ["<rootDir>src/enzyme.config.js"] };
+        packageJson = {...packageJson , jest };
+    }
+
+    const updatedPkgJson = JSON.stringify(packageJson);
+
+    writeFileSync(path, updatedPkgJson);
 }
 
 const createReactApp = async (options) => {
@@ -128,9 +149,18 @@ const installRedux = async (options) => {
     }
 }
 
+const installEnzyme = async () => {
+    try {
+        await execa('npm', ['install', '-D', 'enzyme', 'jest-enzyme', 'enzyme-adapter-react-16']);
+        configEnzyme();
+    } catch (error) {
+        return Promise.reject(error.toString());
+    }
+}
+
 export const createProject = async (options) => {
 
-    const { language, sass, router, axios, redux } = options
+    const { language, sass, router, axios, redux, enzyme } = options
 
     const taskArr = [{ title: `Creating React App with ${language}`, task: () => createReactApp(options) }];
 
@@ -141,6 +171,9 @@ export const createProject = async (options) => {
     if (axios) taskArr.push({ title: 'Instaling Axios', task: () => installAxios() });
 
     if (redux) taskArr.push({ title: 'Instaling Redux', task: () => installRedux(options) });
+
+    if (enzyme) taskArr.push({ title: 'Instaling Enzyme', task: () => installEnzyme() });
+
 
     const tasks = new Listr(taskArr);
 

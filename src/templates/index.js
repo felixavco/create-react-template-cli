@@ -5,8 +5,7 @@ import storeTemplate from './storeTemplate';
 import rootReducerTemplate from './rootReducerTemplate';
 import indexTemplate from './indexTemplate';
 import dockerFileTemplate from './dockerFileTemplate';
-
-
+import enzymeConfigTemplate from './enzymeConfigTemplate';
 
 export { 
     funcCompTemplate,
@@ -15,5 +14,6 @@ export {
     storeTemplate,
     rootReducerTemplate,
     indexTemplate,
-    dockerFileTemplate
+    dockerFileTemplate,
+    enzymeConfigTemplate
 }

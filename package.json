@@ -1,6 +1,6 @@
 {
   "name": "create-react-template-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI tool that helps you to create a React project, or a command to create components",
   "main": "src/index.js",
   "bin": {

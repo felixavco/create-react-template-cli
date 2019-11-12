@@ -73,6 +73,12 @@ const promptQuestions = async () => {
             name: 'redux',
             message: 'Do you want to install Redux?',
             default: true
+        },
+        {
+            type: 'confirm',
+            name: 'enzyme',
+            message: 'Do you want to install Enzyme?',
+            default: true
         }
     ];
 
@@ -84,6 +90,7 @@ const promptQuestions = async () => {
     projectOptions.router = answers.router;
     projectOptions.axios = answers.axios;
     projectOptions.redux = answers.redux;
+    projectOptions.enzyme = answers.enzyme;
     return projectOptions;
 }
 
