@@ -1,10 +1,10 @@
-const appCompTemplate = ({ language, sass, router, redux }) => {
+const appCompTemplate = ({ language, sass }) => {
   const styleExt = sass ? 'scss' : 'css';
   const isTS = language === 'TypeScript';
 
 
 
-  const template = `import React${isTS ? ", { FC } " : ''}from 'react';
+  const template = `import React${isTS ? ", { FC }" : ''} from 'react';
 import './styles/App.${styleExt}';
 
 const App${isTS ? ": FC " : ''} = () => {

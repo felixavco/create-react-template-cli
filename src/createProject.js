@@ -37,7 +37,7 @@ const createReduxDir = ({ language }) => {
     shell.cd(path);
     writeFileSync(`${path}/store.${fileExt}`, storeTemplate());
     writeFileSync(`${path}/types.${fileExt}`, "export const GET_ERRORS = 'GET_ERRORS';");
-    writeFileSync(`${path}/reducers/errorsReducer.${fileExt}`, errorReducerTemplate());
+    writeFileSync(`${path}/reducers/errorsReducer.${fileExt}`, errorReducerTemplate(language));
     writeFileSync(`${path}/reducers/index.${fileExt}`, rootReducerTemplate());
 }
 
@@ -103,7 +103,7 @@ const installSass = async () => {
     }
 }
 
-const installRouter = async () => {
+const installRouter = async (options) => {
     try {
         await execa('npm', ['install', 'react-router-dom']);
         if (options.language === 'TypeScript') {
@@ -142,7 +142,7 @@ export const createProject = async (options) => {
 
     if (sass) taskArr.push({ title: 'Instaling Sass', task: () => installSass() });
 
-    if (router) taskArr.push({ title: 'Instaling Router', task: () => installRouter() });
+    if (router) taskArr.push({ title: 'Instaling Router', task: () => installRouter(options) });
 
     if (axios) taskArr.push({ title: 'Instaling Axios', task: () => installAxios() });
 
