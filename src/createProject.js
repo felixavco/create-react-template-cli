@@ -106,6 +106,9 @@ const installSass = async () => {
 const installRouter = async () => {
     try {
         await execa('npm', ['install', 'react-router-dom']);
+        if (options.language === 'TypeScript') {
+            await execa('npm', ['install', '-D', '@types/react-router-dom', ]);
+        }
     } catch (error) {
         return Promise.reject(error.toString());
     }
@@ -123,7 +126,7 @@ const installRedux = async (options) => {
     try {
         await execa('npm', ['install', 'redux', 'react-redux', 'redux-thunk', 'redux-devtools-extension']);
         if (options.language === 'TypeScript') {
-            await execa('npm', ['install', '-D', '@types/react-redux']);
+            await execa('npm', ['install', '-D', '@types/react-redux', '@types/react-dom', '@types/react']);
         }
         createReduxDir(options);
     } catch (error) {

@@ -8,12 +8,12 @@ import './${compName}.${styleExt}';
 
 class ${compName} extends Component {
   render() {
-    return {
+    return (
       <div>
-      <h1>${compName} Component</h1>
-    </div>
-    }
-  }
+        <h1>${compName} Component</h1>
+      </div>
+    );
+  };
 };
 
 export default ${compName};`;
@@ -21,10 +21,10 @@ export default ${compName};`;
     return template;
   }
 
-  template = `import React${isTs ? ", { Comp }" : null} from 'react';
+  template = `import React${isTs ? ", { FC }" : ''} from 'react';
 import './${compName}.${styleExt}';
 
-const ${compName}${isTs ? ": FC" : null} = () => {
+const ${compName}${isTs ? ": FC" : ''} = () => {
   return (
     <div>
       <h1>${compName} Component</h1>
