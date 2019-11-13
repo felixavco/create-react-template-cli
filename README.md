@@ -34,6 +34,13 @@ or
 
     rt c p MyPage
 
+### Create a nested component or page
+If you need to create a component inside an existing component you can add a 4th argument with the name of the parent component like these two examples
+
+    rt create component NestedComponent ParentComponent (this will create a new component in src/components/ParentComponent/NestedComponent)
+or if you need to create a component inside of a page 
+    rt create page NestedComponent ParentPage (this will create a new component in src/pages/ParentPage/NestedComponent)
+
 ### Using the CLI on an existing project
 Is posible to use the CLI on an existing project, just create a file named `react-template.json` at the root of your project with the following content.
 
@@ -52,15 +59,19 @@ Is posible to use the CLI on an existing project, just create a file named `reac
 ```
 
 - Change the `"language"` property to `javascript` or `typescript`.
-- Set the  `styleExt` property according to your project needs, options are `css`, `scss` `sass` or `less` (Less requires manual configuration).
+- Set the  `"styleExt"` property according to your project needs, options are `css`, `scss` `sass` or `less` (Less requires manual configuration).
+- Set the `"compType"` property to specify the component template when create a new components, options are `func` or `class`
 - In the `path` property you can specify the location of your components folder.
 
 ### Commands available
-`rt init` or `rt i` creates a new project
+`rt init` Creates a new project.
+`rt i` Creates a new project.
 
-`rt generate component <CompName>` or `rt g c <CompName>` creates a component or page
+`rt generate component <ComponentName>` Creates a component or page.
+`rt g c <ComponentName>` Creates a component or page.
 
-`rt create page <PageName>` or `rt c p <PageName>` creates a component or page
+`rt create page <PageName>` Creates a component or page.
+`rt c p <PageName>` Creates a component or page.
 
-
-
+`rt create component <ComponentName> <ParentComponent>` Creates a component inside an existing component or page.
+`rt g p <ComponentName> <ParentPage>` Creates a component inside an existing component or page.

@@ -122,7 +122,10 @@ const installAxios = async () => {
 const installRedux = async (options) => {
     try {
         await execa('npm', ['install', 'redux', 'react-redux', 'redux-thunk', 'redux-devtools-extension']);
-        createReduxDir(options)
+        if (options.language === 'TypeScript') {
+            await execa('npm', ['install', '-D', '@types/react-redux']);
+        }
+        createReduxDir(options);
     } catch (error) {
         return Promise.reject(error.toString());
     }

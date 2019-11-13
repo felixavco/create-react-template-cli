@@ -11,18 +11,18 @@ const parseArgs = rawArgs => {
     return {
         action:
             firstArg === 'i' ? 'init' :
-            firstArg === 'init' ? 'init' :
-            firstArg === 'g' ? 'generate' :
-            firstArg === 'generate' ? 'generate' :
-            firstArg === 'create' ? 'generate' :
-            firstArg === 'c' ? 'generate' :
-            null,
+                firstArg === 'init' ? 'init' :
+                    firstArg === 'g' ? 'generate' :
+                        firstArg === 'generate' ? 'generate' :
+                            firstArg === 'create' ? 'generate' :
+                                firstArg === 'c' ? 'generate' :
+                                    null,
         componentType:
             secondArg === 'c' ? 'component' :
-            secondArg === 'component' ? 'component' :
-            secondArg === 'p' ? 'page' :
-            secondArg === 'page' ? 'page' :
-            null,
+                secondArg === 'component' ? 'component' :
+                    secondArg === 'p' ? 'page' :
+                        secondArg === 'page' ? 'page' :
+                            null,
         componentName: thirdArg,
         parentComponent: rawArgs[5] || ''
     }
@@ -101,7 +101,20 @@ export const cli = async (args) => {
             break;
 
         default:
-            console.log('run "rt init [i]" to initiate a new project \n or \n run "rt generate [g] to generate a component or page"')
+            const help = `
+                "rt init" Creates a new project
+                "rt i" Creates a new project
+
+                "rt generate component <ComponentName>" Creates a component or page
+                "rt g c <ComponentName>" Creates a component or page
+
+                "rt create page <PageName>" Creates a component or page 
+                "rt c p <PageName>" Creates a component or page
+
+                "rt create component <ComponentName> <ParentComponent>" Creates a component inside an existing component or page
+                "rt g p <ComponentName> <ParentPage>" Creates a component inside an existing component or page
+            `;
+            console.log(help)
             break;
     }
 

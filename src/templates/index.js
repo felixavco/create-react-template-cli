@@ -1,4 +1,4 @@
-import funcCompTemplate from './functionComponent';
+import componentTemplate from './componentTemplate';
 import testFileTemplate from './testFileTemplate';
 import appCompTemplate from './appCompTemplate';
 import storeTemplate from './storeTemplate';
@@ -9,7 +9,7 @@ import dockerFileTemplate from './dockerFileTemplate';
 
 
 export { 
-    funcCompTemplate,
+    componentTemplate,
     testFileTemplate,
     appCompTemplate,
     storeTemplate,
