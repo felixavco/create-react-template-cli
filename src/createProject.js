@@ -1,13 +1,18 @@
-import chalk from 'chalk';
 import execa from 'execa';
-import Listr from 'listr';
 import shell from 'shelljs';
 import { writeFileSync } from 'fs';
-import { testFileTemplate, appCompTemplate, storeTemplate, rootReducerTemplate, indexTemplate, dockerFileTemplate } from './templates';
+import {
+  testFileTemplate,
+  appCompTemplate,
+  storeTemplate,
+  rootReducerTemplate,
+  indexTemplate,
+  dockerFileTemplate,
+} from './templates';
 import errorReducerTemplate from './templates/errorReducerTemplate';
 
 const createConfigFile = ({ projectName, language, sass }) => {
-    const data = `{
+  const data = `{
     "project-name":"${projectName}",
     "language":"${language.toLowerCase()}",
     "styleExt":"${sass ? 'scss' : 'css'}",
@@ -18,140 +23,83 @@ const createConfigFile = ({ projectName, language, sass }) => {
         "styles":"src/styles"
     }
 }
-`
-    writeFileSync(`${process.cwd()}/react-template.json`, data)
-}
+`;
+  writeFileSync(`${process.cwd()}/react-template.json`, data);
+};
 
 const createStyleDir = ({ sass }) => {
-    const styleExt = sass ? 'scss' : 'css';
+  const styleExtension = sass ? 'scss' : 'css';
 
-    const path = `${process.cwd()}/styles/App.${styleExt}`;
+  const path = `${process.cwd()}/styles/App.${styleExtension}`;
 
-    writeFileSync(path, '/* App styles */');
-}
+  writeFileSync(path, '/* App styles */');
+};
 
 const createReduxDir = ({ language }) => {
-    const path = `${process.cwd()}/src/redux`;
-    const fileExt = language === 'TypeScript' ? 'ts' : 'js';
-    shell.mkdir([path, `${path}/actions`, `${path}/reducers`]);
-    shell.cd(path);
-    writeFileSync(`${path}/store.${fileExt}`, storeTemplate());
-    writeFileSync(`${path}/types.${fileExt}`, "export const GET_ERRORS = 'GET_ERRORS';");
-    writeFileSync(`${path}/reducers/errorsReducer.${fileExt}`, errorReducerTemplate(language));
-    writeFileSync(`${path}/reducers/index.${fileExt}`, rootReducerTemplate());
-}
+  const path = `${process.cwd()}/src/redux`;
+  const fileExtension = language === 'TypeScript' ? 'ts' : 'js';
+  shell.mkdir([path, `${path}/actions`, `${path}/reducers`]);
+  shell.cd(path);
+  writeFileSync(`${path}/store.${fileExtension}`, storeTemplate());
+  writeFileSync(
+    `${path}/types.${fileExtension}`,
+    "export const GET_ERRORS = 'GET_ERRORS';"
+  );
+  writeFileSync(
+    `${path}/reducers/errorsReducer.${fileExtension}`,
+    errorReducerTemplate(language)
+  );
+  writeFileSync(
+    `${path}/reducers/index.${fileExtension}`,
+    rootReducerTemplate()
+  );
+};
 
 const createAppComp = (options) => {
-    const fileExt = options.language === 'TypeScript' ? 'tsx' : 'jsx';
+  const fileExtension = options.language === 'TypeScript' ? 'tsx' : 'jsx';
 
-    const path = `${process.cwd()}/`;
+  const path = `${process.cwd()}/`;
 
-    writeFileSync(`${path}App.test.${fileExt}`, testFileTemplate('App'));
+  writeFileSync(`${path}App.test.${fileExtension}`, testFileTemplate('App'));
 
-    writeFileSync(`${path}App.${fileExt}`, appCompTemplate(options));
+  writeFileSync(`${path}App.${fileExtension}`, appCompTemplate(options));
 
-    writeFileSync(`${path}index.${fileExt}`, indexTemplate());
-}
+  writeFileSync(`${path}index.${fileExtension}`, indexTemplate());
+};
 
 const createDockerFile = () => {
-    const path = `${process.cwd()}/`;
-    writeFileSync(path + 'Dockerfile', dockerFileTemplate());
-    writeFileSync(path + '.dockerignore', 'node_modules');
-}
+  const path = `${process.cwd()}/`;
+  writeFileSync(path + 'Dockerfile', dockerFileTemplate());
+  writeFileSync(path + '.dockerignore', 'node_modules');
+};
 
 const createReactApp = async (options) => {
-    try {
-        let { projectName, language } = options;
+  try {
+    let { projectName, language } = options;
 
-        const path = `${process.cwd()}/${projectName}/`;
+    const path = `${process.cwd()}/${projectName}/`;
 
-        language = language.toLowerCase();
+    language = language.toLowerCase();
+    language = language === 'typescript' ? `--${language}` : null;
 
-        language = language === 'typescript' ? `--${language}` : null;
+    await execa('npx', ['create-react-app', projectName, language]);
 
-        await execa('npx', ['create-react-app', projectName, language]);
+    shell.cd(path + '/src/');
 
-        shell.cd(path + '/src/');
+    await execa('mkdir', ['components', 'pages', 'styles']);
 
-        await execa('mkdir', ['components', 'pages', 'styles']);
+    shell.rm(['App.*', 'index.*', 'logo.svg']);
 
-        shell.rm(['App.*', 'index.*', 'logo.svg']);
+    createStyleDir(options);
+    createAppComp(options);
 
-        createStyleDir(options);
+    shell.cd(path);
 
-        createAppComp(options);
+    createConfigFile(options);
+    createDockerFile();
 
-        shell.cd(path);
-
-        createConfigFile(options);
-
-        createDockerFile();
-
-        return;
-
-    } catch (error) {
-        return Promise.reject(error.toString());
-    }
-}
-
-const installSass = async () => {
-    try {
-        await execa('npm', ['install', 'node-sass']);
-        return;
-    } catch (error) {
-        return Promise.reject(error.toString());
-    }
-}
-
-const installRouter = async (options) => {
-    try {
-        await execa('npm', ['install', 'react-router-dom']);
-        if (options.language === 'TypeScript') {
-            await execa('npm', ['install', '-D', '@types/react-router-dom', ]);
-        }
-    } catch (error) {
-        return Promise.reject(error.toString());
-    }
-}
-
-const installAxios = async () => {
-    try {
-        await execa('npm', ['install', 'axios']);
-    } catch (error) {
-        return Promise.reject(error.toString());
-    }
-}
-
-const installRedux = async (options) => {
-    try {
-        await execa('npm', ['install', 'redux', 'react-redux', 'redux-thunk', 'redux-devtools-extension']);
-        if (options.language === 'TypeScript') {
-            await execa('npm', ['install', '-D', '@types/react-redux', '@types/react-dom', '@types/react']);
-        }
-        createReduxDir(options);
-    } catch (error) {
-        return Promise.reject(error.toString());
-    }
-}
-
-export const createProject = async (options) => {
-
-    const { language, sass, router, axios, redux } = options
-
-    const taskArr = [{ title: `Creating React App with ${language}`, task: () => createReactApp(options) }];
-
-    if (sass) taskArr.push({ title: 'Instaling Sass', task: () => installSass() });
-
-    if (router) taskArr.push({ title: 'Instaling Router', task: () => installRouter(options) });
-
-    if (axios) taskArr.push({ title: 'Instaling Axios', task: () => installAxios() });
-
-    if (redux) taskArr.push({ title: 'Instaling Redux', task: () => installRedux(options) });
-
-    const tasks = new Listr(taskArr);
-
-    await tasks.run();
-
-    console.log('%s Project ready', chalk.green.bold('DONE'));
-    return true;
-}
+    return;
+  } catch (error) {
+    return Promise.reject(error.toString());
+  }
+};
