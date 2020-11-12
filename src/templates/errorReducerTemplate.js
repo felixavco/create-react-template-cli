@@ -1,10 +1,10 @@
 const errorReducerTemplate = (language) => {
-    const isTs = language === 'TypeScript';
-    return `import { GET_ERRORS } from '../types';
+  const isTs = language === 'TypeScript';
+  return `import { GET_ERRORS } from '../types';
 
 const initialState = {}
 
-export default (state = initialState, action${isTs ? ": any" : ''}) => {
+export default (state = initialState, action${isTs ? ': any' : ''}) => {
     switch (action.type) {
 
         case GET_ERRORS:
@@ -14,7 +14,7 @@ export default (state = initialState, action${isTs ? ": any" : ''}) => {
             return state
     }
 
-}`
-}
+}`;
+};
 
 export default errorReducerTemplate;

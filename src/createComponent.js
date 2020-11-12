@@ -4,50 +4,72 @@ import { writeFileSync, readFileSync } from 'fs';
 import { componentTemplate, testFileTemplate } from './templates';
 
 const getConfig = () => {
-    const configPath = `${process.cwd()}/react-template.json`;
-    return JSON.parse(readFileSync(configPath).toString());
-}
+  const configPath = `${process.cwd()}/react-template.json`;
+  return JSON.parse(readFileSync(configPath).toString());
+};
 
-export const createComponent = (compType, compName, parentComp) => {
-    try {
-        const appConfig = getConfig();
+export const createComponent = (
+  componentType,
+  componentName,
+  parentComponent
+) => {
+  try {
+    const appConfig = getConfig();
 
-        const { path, language, styleExt } = appConfig;
+    const { path, language, styleExt } = appConfig;
 
-        let compPath = `${process.cwd()}/${compType === 'page' ? path.pages : compType === 'component' ? path.components : null}`;
+    let compPath = `${process.cwd()}/${
+      componentType === 'page'
+        ? path.pages
+        : componentType === 'component'
+        ? path.components
+        : null
+    }`;
 
-        compPath = parentComp ? `${compPath}/${parentComp}/${compName}/` : `${compPath}/${compName}/`;
+    compPath = parentComponent
+      ? `${compPath}/${parentComponent}/${componentName}/`
+      : `${compPath}/${componentName}/`;
 
-        shell.mkdir([compPath]);
+    shell.mkdir([compPath]);
 
-        const fileExt = language === 'typescript' ? 'tsx' : 'jsx';
+    const fileExt = language === 'typescript' ? 'tsx' : 'jsx';
 
-        writeFileSync(
-            `${compPath}/${compName}.${fileExt}`,
-            componentTemplate(compName, appConfig)
-        )
-        console.log(chalk.blue(`${compName}.${fileExt}`), chalk.green('CREATED'));
+    writeFileSync(
+      `${compPath}/${componentName}.${fileExt}`,
+      componentTemplate(componentName, appConfig)
+    );
+    console.log(
+      chalk.blue(`${componentName}.${fileExt}`),
+      chalk.green('CREATED')
+    );
 
-        writeFileSync(
-            `${compPath}/${compName}.test.${fileExt}`,
-            testFileTemplate(compName)
-        )
-        console.log(chalk.blue(`${compName}.test.${fileExt}`), chalk.green('CREATED'));
+    writeFileSync(
+      `${compPath}/${componentName}.test.${fileExt}`,
+      testFileTemplate(componentName)
+    );
+    console.log(
+      chalk.blue(`${componentName}.test.${fileExt}`),
+      chalk.green('CREATED')
+    );
 
-        writeFileSync(
-            `${compPath}/${compName}.${styleExt}`,
-            `/* ${compName} styles */`
-        )
-        console.log(chalk.blue(`${compName}.${styleExt}`), chalk.green('CREATED'));
+    writeFileSync(
+      `${compPath}/${componentName}.${styleExt}`,
+      `/* ${componentName} styles */`
+    );
+    console.log(
+      chalk.blue(`${componentName}.${styleExt}`),
+      chalk.green('CREATED')
+    );
 
-        writeFileSync(
-            `${compPath}/index.${fileExt.slice(0, -1)}`,
-            `export { default } from './${compName}';`
-        );
-        console.log(chalk.blue(`index.${fileExt.slice(0, -1)}`), chalk.green('CREATED'));
-
-    } catch (error) {
-        console.error(chalk.red(error.toSTring()))
-    }
-
-}
+    writeFileSync(
+      `${compPath}/index.${fileExt.slice(0, -1)}`,
+      `export { default } from './${componentName}';`
+    );
+    console.log(
+      chalk.blue(`index.${fileExt.slice(0, -1)}`),
+      chalk.green('CREATED')
+    );
+  } catch (error) {
+    console.error(chalk.red(error.toString()));
+  }
+};
